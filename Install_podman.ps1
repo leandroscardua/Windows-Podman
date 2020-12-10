@@ -1,4 +1,6 @@
 
+$ErrorActionPreference = 'Stop'
+
 $source="https://github.com/containers/podman/releases/latest/download/podman-remote-release-windows.zip"
 $destination="$env:HOMEDRIVE\podman"
 
