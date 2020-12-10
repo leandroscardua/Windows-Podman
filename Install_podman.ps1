@@ -1,22 +1,16 @@
 
 $ErrorActionPreference = 'Stop'
 
-$source="https://github.com/containers/podman/releases/latest/download/podman-remote-release-windows.zip"
-$destination="$env:HOMEDRIVE\podman"
+Write-Host "Checking the latest version of Podman"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$tag = (Invoke-WebRequest "https://api.github.com/repos/containers/podman/releases/latest" | ConvertFrom-Json)[0].tag_name
 
+$destination="$env:HOMEDRIVE\podman"
 Write-Host "Creating folder on $destination"
 mkdir -force $destination | Out-Null
 
 Write-Host "Downloading podman to $destination"
-curl.exe --silent $source -L -o "$destination\podman.zip"
+Invoke-WebRequest "https://github.com/containers/podman/releases/download/$tag/podman-$tag.msi" -UseBasicParsing -OutFile $destination\podman-$tag.msi
 
-Write-Host "Expand podman file to $destination"
-Expand-Archive -LiteralPath "$destination\podman.zip" -DestinationPath $destination -Force
+Write-Host "Installing podman"
 
-Write-Host "Setting $destination to System Environment Variable"
-$env:Path += ";$destination" 
-[Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
-
-
-Write-Host "Cleaning after the installation"
-Remove-Item -LiteralPath "$destination\podman.zip"
