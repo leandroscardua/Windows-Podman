@@ -1,4 +1,3 @@
-
 $ErrorActionPreference = 'Stop'
 
 Write-Host "Checking the latest version of Podman"
@@ -12,5 +11,7 @@ mkdir -force $destination | Out-Null
 Write-Host "Downloading podman to $destination"
 Invoke-WebRequest "https://github.com/containers/podman/releases/download/$tag/podman-$tag.msi" -UseBasicParsing -OutFile $destination\podman-$tag.msi
 
-Write-Host "Installing podman"
+Write-Host "Installing podman on $destination"
+
+msiexec /i "$destination\podman-$tag.msi" INSTALLDIR="$destination\" /quiet
 
